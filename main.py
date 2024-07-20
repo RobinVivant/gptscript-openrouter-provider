@@ -1,13 +1,20 @@
 import os
+from pathlib import Path
 
 import httpx
 from fastapi import FastAPI, Request
+from dotenv import load_dotenv
 from fastapi.responses import JSONResponse, StreamingResponse
 
 debug = os.environ.get("GPTSCRIPT_DEBUG", "false") == "true"
+
+# Load .env file from user's home directory
+dotenv_path = Path.home() / ".env"
+load_dotenv(dotenv_path)
+
 openrouter_api_key = os.environ.get("OPENROUTER_API_KEY")
 if not openrouter_api_key:
-    raise ValueError("Please set the OPENROUTER_API_KEY environment variable")
+    raise ValueError("Please set the OPENROUTER_API_KEY in your ~/.env file or as an environment variable")
 
 app = FastAPI()
 client = httpx.AsyncClient(base_url="https://openrouter.ai/api/v1")
