@@ -1,13 +1,19 @@
-# Openrouter Provider for GPTScript
+# OpenRouter Provider for GPTScript
 
-This provider allows GPTScript to use models available through Openrouter, giving you access to a wide range of AI models.
+![OpenRouter Logo](https://openrouter.ai/favicon.ico) ![GPTScript Logo](https://gptscript.ai/favicon.ico)
+
+This provider allows GPTScript to use models available through OpenRouter, giving you access to a wide range of AI models.
 
 ## Setup
 
-1. Get your Openrouter API key from [Openrouter](https://openrouter.ai/keys).
+1. Get your OpenRouter API key from [OpenRouter](https://openrouter.ai/keys).
 2. Set the environment variable:
-   ```
+   ```bash
    export OPENROUTER_API_KEY=YOUR_API_KEY
+   ```
+   Alternatively, you can add the API key to a `.env` file in your home directory:
+   ```
+   OPENROUTER_API_KEY=YOUR_API_KEY
    ```
 
 ## Usage Examples
@@ -27,13 +33,13 @@ gptscript --default-model='anthropic/claude-3.5-sonnet:beta from github.com/Robi
 
 ### Listing Available Models
 
-To see all available models through Openrouter:
+To see all available models through OpenRouter:
 
 ```bash
 gptscript --list-models github.com/RobinVivant/gptscript-openrouter-provider
 ```
 
-You can change the `GPTSCRIPT_MODEL` environment variable to use any model available through Openrouter. Alternatively, you can use the `--default-model` flag when running gptscript. The `--default-model` flag takes precedence over the `GPTSCRIPT_MODEL` environment variable if both are set.
+You can change the `GPTSCRIPT_MODEL` environment variable to use any model available through OpenRouter. Alternatively, you can use the `--default-model` flag when running gptscript. The `--default-model` flag takes precedence over the `GPTSCRIPT_MODEL` environment variable if both are set.
 
 ## Development
 
@@ -60,12 +66,18 @@ To run the provider locally:
    gptscript --default-model=openai/gpt-4-turbo examples/bob.gpt
    ```
 
-Make sure to replace `your_openrouter_api_key_here` with your actual Openrouter API key.
+Make sure to replace `your_openrouter_api_key_here` with your actual OpenRouter API key.
 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
+## Support
 
-[Insert your license information here]
+If you encounter any issues or have questions, please [open an issue](https://github.com/RobinVivant/gptscript-openrouter-provider/issues) on GitHub.
+
+---
+
+<p align="center">
+  Made with ❤️ by the GPTScript community
+</p>
