@@ -1,6 +1,6 @@
-# OpenRouter Provider for GPTScript
+# OpenRouter Provider for GPTScript ![GPTScript Logo](https://docs.gptscript.ai/img/favicon.ico) ![OpenRouter Logo](https://openrouter.ai/favicon.ico)
 
-![OpenRouter Logo](https://openrouter.ai/favicon.ico) ![GPTScript Logo](https://gptscript.ai/favicon.ico)
+
 
 This provider allows GPTScript to use models available through OpenRouter, giving you access to a wide range of AI models.
 
@@ -77,7 +77,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 If you encounter any issues or have questions, please [open an issue](https://github.com/RobinVivant/gptscript-openrouter-provider/issues) on GitHub.
 
 ---
-
-<p align="center">
-  Made with ❤️ by the GPTScript community
-</p>
