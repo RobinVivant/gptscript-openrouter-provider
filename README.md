@@ -41,33 +41,6 @@ gptscript --list-models github.com/RobinVivant/gptscript-openrouter-provider
 
 You can change the `GPTSCRIPT_MODEL` environment variable to use any model available through OpenRouter. Alternatively, you can use the `--default-model` flag when running gptscript. The `--default-model` flag takes precedence over the `GPTSCRIPT_MODEL` environment variable if both are set.
 
-## Development
-
-To run the provider locally:
-
-1. Set up the environment:
-   ```bash
-   python -m venv .venv
-   source ./.venv/bin/activate
-   pip install --upgrade -r requirements.txt
-   ```
-
-2. Run the provider:
-   ```bash
-   ./run.sh
-   ```
-
-3. In another terminal, use the provider:
-   ```bash
-   export GPTSCRIPT_DEBUG=true
-   export OPENROUTER_API_KEY=your_openrouter_api_key_here
-   export GPTSCRIPT_MODEL=openai/gpt-4-turbo
-
-   gptscript --default-model=openai/gpt-4-turbo examples/bob.gpt
-   ```
-
-Make sure to replace `your_openrouter_api_key_here` with your actual OpenRouter API key.
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
