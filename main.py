@@ -60,7 +60,7 @@ async def completions(request: Request) -> StreamingResponse:
 
     async def generate():
         try:
-            async with client.stream("POST", "/chat/completions", json={**data, "model": model},
+            async with client.stream("POST", "/chat/completions", json={**data},
                                      headers=headers) as response:
                 response.raise_for_status()
                 async for chunk in response.aiter_bytes():
