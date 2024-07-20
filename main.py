@@ -1,13 +1,8 @@
 import os
-import sys
-import logging
 
 import httpx
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, StreamingResponse
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 debug = os.environ.get("GPTSCRIPT_DEBUG", "false") == "true"
 openrouter_api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -37,11 +32,7 @@ async def post_root():
 
 @app.get("/")
 async def get_root():
-    return {'status': 'ok', 'message': 'OpenRouter provider is running'}
-
-@app.get("/health")
-async def health_check():
-    return {'status': 'healthy', 'message': 'OpenRouter provider is healthy'}
+    return 'ok'
 
 
 @app.get("/v1/models")
@@ -53,13 +44,12 @@ async def list_models() -> JSONResponse:
 @app.post("/v1/chat/completions")
 async def completions(request: Request) -> StreamingResponse:
     data = await request.json()
-    model = os.environ.get("GPTSCRIPT_MODEL", "openai/gpt-3.5-turbo")
+    model = os.environ.get("GPTSCRIPT_MODEL", "anthropic/claude-3.5-sonnet:beta")
     headers = {
         "Authorization": f"Bearer {openrouter_api_key}",
         "HTTP-Referer": "https://github.com/RobinVivant/gptscript-openrouter-provider",
         "X-Title": "GPTScript Openrouter Provider"
     }
-    logger.info(f"Received request for model: {model}")
 
     async def generate():
         try:
