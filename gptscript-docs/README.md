@@ -30,9 +30,30 @@ gptscript github.com/gptscript-ai/llm-basics-demo
 ```
 
 A few notes:
-- You'll need an [OpenAI API key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key)
+- You'll need an [OpenAI API key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key) or an [Openrouter API key](https://openrouter.ai/keys)
 - On Windows, after installing gptscript you may need to restart your terminal for the changes to take effect
 - The above script is a simple chat-based assistant. You can ask it questions and it will answer to the best of its ability.
+
+### Using Openrouter Provider
+
+GPTScript now supports using models available through Openrouter. To use this feature:
+
+1. Set up your Openrouter API key:
+   ```
+   export OPENROUTER_API_KEY=your_openrouter_api_key_here
+   ```
+
+2. Choose a model (e.g., GPT-4 Turbo):
+   ```
+   export GPTSCRIPT_MODEL=openai/gpt-4-turbo
+   ```
+
+3. Run GPTScript with the Openrouter provider:
+   ```
+   gptscript --default-model='openai/gpt-4-turbo from github.com/RobinVivant/gptscript-openrouter-provider' your_script.gpt
+   ```
+
+You can change the `GPTSCRIPT_MODEL` environment variable to use any model available through Openrouter.
 
 ## Community
 
