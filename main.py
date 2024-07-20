@@ -59,6 +59,7 @@ async def completions(request: Request) -> StreamingResponse:
         "HTTP-Referer": "https://github.com/RobinVivant/gptscript-openrouter-provider",
         "X-Title": "GPTScript Openrouter Provider"
     }
+    logger.info(f"Received request for model: {model}")
 
     async def generate():
         try:
