@@ -26,7 +26,6 @@ pip install --upgrade -r requirements.txt
 Then, in another terminal:
 
 ```
-export OPENAI_BASE_URL=http://127.0.0.1:8000/v1
 export GPTSCRIPT_DEBUG=true
 export OPENROUTER_API_KEY=your_openrouter_api_key_here
 export GPTSCRIPT_MODEL=openai/gpt-4-turbo
