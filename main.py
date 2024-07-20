@@ -1,15 +1,18 @@
 import os
 import sys
+import logging
 
 import httpx
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, StreamingResponse
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 debug = os.environ.get("GPTSCRIPT_DEBUG", "false") == "true"
 openrouter_api_key = os.environ.get("OPENROUTER_API_KEY")
 if not openrouter_api_key:
-    print("Please set the OPENROUTER_API_KEY environment variable", file=sys.stderr)
-    sys.exit(1)
+    raise ValueError("Please set the OPENROUTER_API_KEY environment variable")
 
 app = FastAPI()
 client = httpx.AsyncClient(base_url="https://openrouter.ai/api/v1")
@@ -34,7 +37,11 @@ async def post_root():
 
 @app.get("/")
 async def get_root():
-    return 'ok'
+    return {'status': 'ok', 'message': 'OpenRouter provider is running'}
+
+@app.get("/health")
+async def health_check():
+    return {'status': 'healthy', 'message': 'OpenRouter provider is healthy'}
 
 
 @app.get("/v1/models")
@@ -46,7 +53,7 @@ async def list_models() -> JSONResponse:
 @app.post("/v1/chat/completions")
 async def completions(request: Request) -> StreamingResponse:
     data = await request.json()
-    model = os.environ.get("GPTSCRIPT_MODEL", "anthropic/claude-3.5-sonnet:beta")
+    model = os.environ.get("GPTSCRIPT_MODEL", "openai/gpt-3.5-turbo")
     headers = {
         "Authorization": f"Bearer {openrouter_api_key}",
         "HTTP-Referer": "https://github.com/RobinVivant/gptscript-openrouter-provider",
@@ -54,10 +61,18 @@ async def completions(request: Request) -> StreamingResponse:
     }
 
     async def generate():
-        async with client.stream("POST", "/chat/completions", json={**data, "model": model},
-                                 headers=headers) as response:
-            async for chunk in response.aiter_bytes():
-                yield chunk
+        try:
+            async with client.stream("POST", "/chat/completions", json={**data, "model": model},
+                                     headers=headers) as response:
+                response.raise_for_status()
+                async for chunk in response.aiter_bytes():
+                    yield chunk
+        except httpx.HTTPStatusError as e:
+            error_message = f"HTTP error occurred: {e.response.status_code} {e.response.reason_phrase}"
+            yield error_message.encode()
+        except Exception as e:
+            error_message = f"An error occurred: {str(e)}"
+            yield error_message.encode()
 
     return StreamingResponse(generate(), media_type="application/json")
 
