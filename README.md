@@ -33,7 +33,7 @@ To see all available models through Openrouter:
 gptscript --list-models github.com/RobinVivant/gptscript-openrouter-provider
 ```
 
-You can change the `GPTSCRIPT_MODEL` environment variable to use any model available through Openrouter.
+You can change the `GPTSCRIPT_MODEL` environment variable to use any model available through Openrouter. Alternatively, you can use the `--default-model` flag when running gptscript. The `--default-model` flag takes precedence over the `GPTSCRIPT_MODEL` environment variable if both are set.
 
 ## Development
 
