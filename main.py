@@ -1,29 +1,22 @@
 import json
 import os
 import sys
-
-import boto3
-import claude3_provider_common
-from anthropic import AsyncAnthropicBedrock
+import httpx
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, StreamingResponse
 
-try:
-    client = boto3.client('sts')
-    response = client.get_caller_identity()
-except Exception as e:
-    print("Please authenticate with AWS - ", e, file=sys.stderr)
+debug = os.environ.get("GPTSCRIPT_DEBUG", "false") == "true"
+openrouter_api_key = os.environ.get("OPENROUTER_API_KEY")
+if not openrouter_api_key:
+    print("Please set the OPENROUTER_API_KEY environment variable", file=sys.stderr)
     sys.exit(1)
 
-debug = os.environ.get("GPTSCRIPT_DEBUG", "false") == "true"
-client = AsyncAnthropicBedrock()
 app = FastAPI()
-
+client = httpx.AsyncClient(base_url="https://openrouter.ai/api/v1")
 
 def log(*args):
     if debug:
         print(*args)
-
 
 @app.middleware("http")
 async def log_body(request: Request, call_next):
@@ -31,28 +24,35 @@ async def log_body(request: Request, call_next):
     log("HTTP REQUEST BODY: ", body)
     return await call_next(request)
 
-
 @app.post("/")
 async def post_root():
     return 'ok'
-
 
 @app.get("/")
 async def get_root():
     return 'ok'
 
-
 @app.get("/v1/models")
 async def list_models() -> JSONResponse:
-    return await claude3_provider_common.list_models(client)
-
+    response = await client.get("/models", headers={"Authorization": f"Bearer {openrouter_api_key}"})
+    return JSONResponse(response.json())
 
 @app.post("/v1/chat/completions")
 async def completions(request: Request) -> StreamingResponse:
-    data = await request.body()
-    input = json.loads(data)
-    return await claude3_provider_common.completions(client, input)
+    data = await request.json()
+    model = os.environ.get("GPTSCRIPT_MODEL", "openai/gpt-3.5-turbo")
+    headers = {
+        "Authorization": f"Bearer {openrouter_api_key}",
+        "HTTP-Referer": "https://github.com/RobinVivant/gptscript-openrouter-provider",
+        "X-Title": "GPTScript Openrouter Provider"
+    }
+    
+    async def generate():
+        async with client.stream("POST", "/chat/completions", json={**data, "model": model}, headers=headers) as response:
+            async for chunk in response.aiter_bytes():
+                yield chunk
 
+    return StreamingResponse(generate(), media_type="application/json")
 
 if __name__ == "__main__":
     import uvicorn
